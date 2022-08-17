@@ -7,9 +7,9 @@ class Program
 {
     static void Main()
     {
-        SqlConnection conn = new SqlConnection("Server = tcp:ItzMeAJ\\MSSQLSERVER; Initial Catalog = ECPLMaster2022; Persist Security Info = False; User ID = sa; Password = ********; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = True; Connection Timeout = 60;");
+        SqlConnection conn = new SqlConnection("Server=tcp:AjServer\\\\MSSQLSERVER;Initial Catalog = ECPLMaster2022;Persist Security Info=False;User ID=sa;Password=******; MultipleActiveResultSets=False; Encrypt=True; TrustServerCertificate=True;Connection Timeout=60;");
         conn.Open();
-        SqlCommand cmd = new SqlCommand("SELECT SkuCode, PluCode, COUNT(*) FROM Sheet1$ GROUP BY SkuCode, PluCode HAVING COUNT(*)>1;", conn);
+        SqlCommand cmd = new SqlCommand("SELECT SkuCode, PluCode FROM (SELECT SkuCode, PluCode, COUNT(*) OVER (PARTITION BY PluCode) AS cnt FROM Sheet1$) AS t WHERE t.cnt > 1;", conn);
         SqlDataReader reader = cmd.ExecuteReader();
         IList<PluMaster> pluList = new List<PluMaster>();
         if (reader.HasRows)
